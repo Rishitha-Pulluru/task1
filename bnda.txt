@@ -1,1 +1,135 @@
-havent started
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
+</style>
+</head>
+<body onload="startGame()">
+    
+<script>
+    var y=150;
+    var j=1;
+    var myGamePiece;
+    var myObstacle;
+    
+    function startGame() {
+  myGamePiece = new component(1,50,150,null,200,10,70,9,35,0,0,2*Math.PI);
+        myObstacle  = new component(2,395,150,40,25,15,382,360,371,8,0,2*Math.PI);  
+        myGameArea.start();
+}
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 500;
+        this.canvas.height = 300;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+      this.interval = setInterval(updateGameArea, 20);
+        window.addEventListener('keydown', function (e) {
+            myGameArea.key = e.keyCode;
+        })
+        window.addEventListener('keyup', function (e) {
+            myGameArea.key = false;
+        })
+    }, 
+   clear : function() {
+        this.context.clearRect(0, 0,this.canvas.width, this.canvas.height);
+    },
+      stop : function() {
+        clearInterval(this.interval);
+    }
+    }
+    
+
+  function component(i,x,y,z,w,v,u,rh,rv,rot,sa,ea) {
+    this.gamearea=myGameArea;
+      this.x = x; this.y = y;this.z = z;
+    this.w = w; this.v = v;this.u = u; 
+    this.rh = rh;this.rv=rv; this.sa=sa;this.ea=ea;this.rot=rot;
+    this.update=function(){
+    if(i==1){
+        ctx = myGameArea.context;           
+    ctx.beginPath();
+    ctx.ellipse(this.x, this.y,this.rh,this.rv,this.rot,this.sa, this.ea,false);
+    ctx.moveTo(this.v,this.y);
+    ctx.lineTo(this.u,this.y);
+    ctx.stroke(); }
+        else{
+            ctx = myGameArea.context;
+            ctx.beginPath();
+    ctx.fillStyle = "#FF6347";
+ctx.arc(this.x,this.y,this.z,this.sa,this.ea,true);
+    ctx.fill();
+
+       //ctx.closePath();
+        ctx.font = "8px Arial";
+ctx.fillText("50",this.u,this.y); 
+    ctx.stroke();
+    ctx.beginPath();
+        ctx.fillStyle = "#ffff00";
+ctx.arc(this.x,this.y,this.w,this.sa,this.ea,true);
+     ctx.fill();
+  ctx.font = "8px Arial";
+ctx.fillText("30",this.rh,this.y); 
+    //ctx.closePath();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.fillStyle = "#FF9999";
+ctx.arc(this.x,this.y,this.v,this.sa,this.ea,true);
+     ctx.fill();
+   // ctx.closePath(); 
+       ctx.font = "8px Arial";
+ctx.fillText("40",this.rv,this.y); 
+ctx.stroke();
+            
+        }
+  }
+       this.newPos = function() {
+     //   this.x += this.speedX;
+        this.y += this.speedY;        
+    }
+}
+
+function updateGameArea() {
+    //var j=1;
+    myGameArea.clear();
+    myGamePiece.speedX = 0;
+    myGamePiece.speedY = 0;    
+   //if (myGameArea.key && myGameArea.key == 37) {myGamePiece.speedX = -1; }
+   //if (myGameArea.key && myGameArea.key == 39) {myGamePiece.speedX = 1; }
+    if (myGameArea.key && myGameArea.key == 38) {myGamePiece.speedY = -1; }
+    if (myGameArea.key && myGameArea.key == 40) {myGamePiece.speedY = 1; }
+    if (myGameArea.key && myGameArea.key == 32)
+        {
+            
+        }
+    if(myObstacle.y>100 && myObstacle.y !=200 && j==1)
+       { myObstacle.y+=1;}
+   else if(myObstacle.y==200)
+       {
+            myObstacle.y-=1;
+            j=2;
+        }
+  else if (myObstacle.y<200 && myObstacle.y!=100 && j==2)
+           myObstacle.y-=1;
+   else 
+        {
+            myObstacle.y+=1;
+            j=1;
+        }
+  
+    myObstacle.update();
+    myGamePiece.newPos();    
+    myGamePiece.update();
+}
+
+    </script>
+    </body>
+
+ 
